@@ -1,0 +1,78 @@
+networks:
+  distributed_system:
+    driver: bridge
+
+services:
+  node1:
+    build: 
+      context: .
+    container_name: node1
+    ports:
+      - 3001:3000
+    expose:
+      - 3001
+    command: sh -c "npm run dev"
+    volumes:
+      - .:/app
+    environment:
+      - NODE_ENV=prod
+      - NODE_ID=1 
+      - FILE_OWNER_ID=1
+      - PORT=3000
+    networks:
+      - distributed_system
+
+  node2:
+    build: 
+      context: .
+    container_name: node2
+    ports:
+      - 3002:3000
+    expose:
+      - 3002
+    command: sh -c "npm run dev"
+    volumes:
+      - .:/app
+    environment:
+      - NODE_ENV=prod
+      - NODE_ID=2 
+      - FILE_OWNER_ID=1
+      - PORT=3000
+    networks:
+      - distributed_system
+
+  node3:
+    build: 
+      context: .
+    container_name: node3
+    ports:
+      - 3003:3000
+    expose:
+      - 3003
+    command: sh -c "npm run dev"
+    volumes:
+      - .:/app
+    environment:
+      - NODE_ID=3 
+      - FILE_OWNER_ID=1
+      - PORT=3000
+    networks:
+      - distributed_system
+
+  node4:
+    build: 
+      context: .
+    container_name: node4
+    ports:
+      - 3004:3000
+    expose:
+      - 3004
+    command: sh -c "npm run dev"
+    volumes:
+      - .:/app
+    environment:
+      - NODE_ID=4 
+      - FILE_OWNER_ID=1
+      - PORT=3000
+    networks:
+      - distributed_system
