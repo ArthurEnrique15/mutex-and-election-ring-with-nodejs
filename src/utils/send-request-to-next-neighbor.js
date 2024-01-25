@@ -1,6 +1,7 @@
 import { api } from './api.js'
 import { NODE_ID, TOTAL_NODES } from '../config/global.js'
 import { getNodeUrl } from './get-node-url.js'
+import { checkIfNodeIsDown } from './check-if-node-is-down.js'
 
 const getNextNeighborUrl = (jumps) => {
   if (NODE_ID + jumps + 1 <= TOTAL_NODES) {
@@ -22,26 +23,33 @@ export const sendRequestToNextNeighbor = async ({
 
   console.log(`sending ${messageType} message to `, nextNeighborUrl)
 
-  let response = await api({
+  const response = await api({
     url: `${nextNeighborUrl}${route}`,
     method,
     headers,
   })
 
-  while (
-    response.status === 500 &&
-    response.data.error.code === 'ECONNREFUSED'
-  ) {
+  let nodeIsDown = checkIfNodeIsDown({
+    status: response.status,
+    data: response.data,
+  })
+
+  while (nodeIsDown) {
     jumps++
 
     nextNeighborUrl = getNextNeighborUrl(jumps)
 
     console.log(`sending ${messageType} message to `, nextNeighborUrl)
 
-    response = await api({
+    const nextResponse = await api({
       url: `${nextNeighborUrl}${route}`,
       method,
       headers,
+    })
+
+    nodeIsDown = checkIfNodeIsDown({
+      status: nextResponse.status,
+      data: nextResponse.data,
     })
   }
 }

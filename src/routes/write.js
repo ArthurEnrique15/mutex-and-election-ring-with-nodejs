@@ -12,6 +12,7 @@ import { sendRequestToNextNeighbor } from '../utils/send-request-to-next-neighbo
 import { writeInFile } from '../utils/write-in-file.js'
 import { api } from '../utils/api.js'
 import { getNodeUrl } from '../utils/get-node-url.js'
+import { checkIfNodeIsDown } from '../utils/check-if-node-is-down.js'
 
 const writeRoute = Router()
 
@@ -24,10 +25,12 @@ writeRoute.post('/write', async (req, res) => {
     },
   })
 
-  if (
-    requestAccessStatus === 500 &&
-    requestAccessData.error.code === 'ECONNREFUSED'
-  ) {
+  const leaderIsDown = checkIfNodeIsDown({
+    status: requestAccessStatus,
+    data: requestAccessData,
+  })
+
+  if (leaderIsDown) {
     console.log('leader is down, starting election')
 
     await sendRequestToNextNeighbor({
