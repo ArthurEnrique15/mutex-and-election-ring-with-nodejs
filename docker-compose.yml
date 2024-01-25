@@ -11,9 +11,9 @@ services:
       - 3001:3000
     expose:
       - 3001
-    command: sh -c "npm run dev"
     volumes:
-      - .:/app
+      - ./src:/app/src
+      - ./file.txt:/app/file.txt
     environment:
       - NODE_ENV=prod
       - NODE_ID=1 
@@ -30,9 +30,9 @@ services:
       - 3002:3000
     expose:
       - 3002
-    command: sh -c "npm run dev"
     volumes:
-      - .:/app
+      - ./src:/app/src
+      - ./file.txt:/app/file.txt
     environment:
       - NODE_ENV=prod
       - NODE_ID=2 
@@ -49,9 +49,9 @@ services:
       - 3003:3000
     expose:
       - 3003
-    command: sh -c "npm run dev"
     volumes:
-      - .:/app
+      - ./src:/app/src
+      - ./file.txt:/app/file.txt
     environment:
       - NODE_ID=3 
       - FILE_OWNER_ID=1
@@ -67,9 +67,9 @@ services:
       - 3004:3000
     expose:
       - 3004
-    command: sh -c "npm run dev"
     volumes:
-      - .:/app
+      - ./src:/app/src
+      - ./file.txt:/app/file.txt
     environment:
       - NODE_ID=4 
       - FILE_OWNER_ID=1
