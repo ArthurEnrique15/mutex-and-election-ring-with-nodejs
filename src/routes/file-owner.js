@@ -32,12 +32,12 @@ fileOwnerRoutes.patch(
 )
 
 fileOwnerRoutes.post('/access-file', fileAccessAuthMiddleware, (req, res) => {
-  const { hostname, timestamp } = req.body
+  const { message } = req.body
   const { node_id } = req.headers
 
   console.log('FILE OWNER - writing in file, request from node ', node_id)
 
-  writeInFile({ node_id, hostname, timestamp })
+  writeInFile(message)
 
   return res.json({ message: 'File accessed' })
 })

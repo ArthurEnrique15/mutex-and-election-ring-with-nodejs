@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import os from 'os'
 
 import {
   NODE_ID,
@@ -15,8 +16,6 @@ import { getNodeUrl } from '../utils/get-node-url.js'
 const writeRoute = Router()
 
 writeRoute.post('/write', async (req, res) => {
-  const timestamp = new Date().toISOString()
-
   const { status: requestAccessStatus, data: requestAccessData } = await api({
     url: `${CONFIG.CURRENT_LEADER_URL}/request-access`,
     method: 'POST',
@@ -52,21 +51,24 @@ writeRoute.post('/write', async (req, res) => {
     await sleep(1000)
   }
 
-  const hostname = getNodeUrl(NODE_ID)
+  const hostname = os.hostname()
+  const timestamp = new Date().toISOString()
+
+  const networkData = os.networkInterfaces().eth0[0]
+  const ip = networkData.address
+  const mac = networkData.mac
+
+  const message = `Node ${NODE_ID} wrote at ${timestamp} from ${hostname} with IP ${ip} and MAC ${mac}\n`
 
   if (IS_FILE_OWNER) {
-    writeInFile({
-      node_id: NODE_ID,
-      hostname,
-      timestamp,
-    })
+    writeInFile(message)
   } else {
     const fileOwnerBaseUrl = getNodeUrl(FILE_OWNER_ID)
 
     const { status: accessStatus, data: accessData } = await api({
       url: `${fileOwnerBaseUrl}/access-file`,
       method: 'POST',
-      data: { hostname, timestamp },
+      data: { message },
       headers: { node_id: NODE_ID },
     })
 
