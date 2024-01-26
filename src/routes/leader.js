@@ -22,6 +22,8 @@ leaderRoutes.post(
   async (req, res) => {
     const { node_id } = req.headers
 
+    console.log(`received access request from node ${node_id}`)
+
     const nodeId = Number(node_id)
 
     if (CONFIG.CURRENT_ALLOWED_NODE_ID) {
@@ -74,6 +76,10 @@ leaderRoutes.post(
   thisIsTheLeaderAuthMiddleware,
   fileAccessAuthMiddleware,
   async (req, res) => {
+    console.log(
+      `received access release from node ${CONFIG.CURRENT_ALLOWED_NODE_ID}`,
+    )
+
     if (ACCESS_QUEUE.length > 0) {
       CONFIG.CURRENT_ALLOWED_NODE_ID = ACCESS_QUEUE.shift()
       console.log('access granted to node', CONFIG.CURRENT_ALLOWED_NODE_ID)

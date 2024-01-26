@@ -21,7 +21,7 @@ export const sendRequestToNextNeighbor = async ({
 
   let nextNeighborUrl = getNextNeighborUrl(jumps)
 
-  console.log(`sending ${messageType} message to `, nextNeighborUrl)
+  console.log(`sending ${messageType} message to ${nextNeighborUrl}`)
 
   const response = await api({
     url: `${nextNeighborUrl}${route}`,
@@ -39,7 +39,7 @@ export const sendRequestToNextNeighbor = async ({
 
     nextNeighborUrl = getNextNeighborUrl(jumps)
 
-    console.log(`sending ${messageType} message to `, nextNeighborUrl)
+    console.log(`sending ${messageType} message to ${nextNeighborUrl}`)
 
     const nextResponse = await api({
       url: `${nextNeighborUrl}${route}`,

@@ -9,7 +9,7 @@ const electionRoutes = Router()
 electionRoutes.post('/election', async (req, res) => {
   const { previous_node_id } = req.headers
 
-  console.log('received election message from ', previous_node_id)
+  console.log('received election message from', previous_node_id)
 
   if (NODE_ID > Number(previous_node_id)) {
     await sendRequestToNextNeighbor({
@@ -21,6 +21,8 @@ electionRoutes.post('/election', async (req, res) => {
 
     return res.json({ message: 'Election started' })
   }
+
+  console.log('new leader defined, node id', previous_node_id)
 
   CONFIG.CURRENT_LEADER_ID = Number(previous_node_id)
   CONFIG.CURRENT_LEADER_URL = getNodeUrl(previous_node_id)
